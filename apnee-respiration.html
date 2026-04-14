@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Respiration · Breathing</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;1,300;1,400&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --deep:    #050e1a;
+  --abyss:   #071828;
+  --ocean:   #0a2744;
+  --mid:     #0e3d6e;
+  --surface: #1a6a8a;
+  --foam:    #4db8c8;
+  --sky:     #7ed6e0;
+  --pearl:   #c8eef4;
+  --sand:    #e8d5b0;
+  --kelp:    #2a7a5a;
+  --coral:   #e07a5f;
+  --text:    #ddf0f5;
+  --muted:   #7aaabb;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--deep);
+  color: var(--text);
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Animated ocean background ── */
+.ocean-bg {
+  position: fixed; inset: 0; z-index: 0;
+  background: linear-gradient(180deg,
+    #020810 0%,
+    #050e1a 20%,
+    #071828 50%,
+    #0a2744 80%,
+    #0e3d6e 100%);
+  overflow: hidden;
+}
+
+.wave-layer {
+  position: absolute;
+  width: 200%; height: 200px;
+  border-radius: 50%;
+  opacity: 0.07;
+  animation: waveFlow linear infinite;
+}
+.wave-layer:nth-child(1) { background: var(--foam); bottom: 15%; left:-50%; animation-duration:18s; }
+.wave-layer:nth-child(2) { background: var(--sky);  bottom: 10%; left:-50%; animation-duration:24s; animation-delay:-6s; opacity:0.05; }
+.wave-layer:nth-child(3) { background: var(--pearl);bottom: 5%;  left:-50%; animation-duration:30s; animation-delay:-12s; opacity:0.04; }
+
+@keyframes waveFlow {
+  0%   { transform: translateX(0) scaleY(1); }
+  50%  { transform: translateX(25%) scaleY(1.1); }
+  100% { transform: translateX(50%) scaleY(1); }
+}
+
+/* Light rays */
+.rays {
+  position: absolute; top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100%; height: 60%;
+  background: repeating-conic-gradient(
+    from 0deg at 50% 0%,
+    rgba(125,214,224,0.015) 0deg 3deg,
+    transparent 3deg 8deg
+  );
+  animation: rayShift 20s ease-in-out infinite alternate;
+}
+@keyframes rayShift { from{opacity:0.4} to{opacity:1} }
+
+/* Bubbles */
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(200,238,244,0.4), rgba(77,184,200,0.1));
+  border: 1px solid rgba(200,238,244,0.2);
+  animation: bubbleRise linear infinite;
+}
+@keyframes bubbleRise {
+  0%   { transform: translateY(0) translateX(0) scale(1); opacity:0; }
+  10%  { opacity:1; }
+  90%  { opacity:0.6; }
+  100% { transform: translateY(-80vh) translateX(20px) scale(0.5); opacity:0; }
+}
+
+/* ── Layout ── */
+.page-wrap {
+  position: relative; z-index: 1;
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+.site-header {
+  text-align: center;
+  padding: 48px 20px 32px;
+  border-bottom: 1px solid rgba(77,184,200,0.1);
+}
+.site-header .eyebrow {
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--foam);
+  margin-bottom: 12px;
+}
+.site-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 300;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  color: var(--pearl);
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+.site-header h1 em {
+  font-style: italic;
+  color: var(--sky);
+}
+.site-header .tagline {
+  margin-top: 12px;
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* ── Section titles ── */
+.section-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--foam);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(77,184,200,0.3), transparent);
+}
+
+/* ── Preset cards ── */
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+@media (min-width: 576px) { .preset-grid { grid-template-columns: repeat(6, 1fr); } }
+
+.preset-card {
+  background: rgba(10,39,68,0.6);
+  border: 1px solid rgba(77,184,200,0.15);
+  border-radius: 14px;
+  padding: 14px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  backdrop-filter: blur(6px);
+  position: relative;
+  overflow: hidden;
+}
+.preset-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(77,184,200,0.08), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.preset-card:hover::before, .preset-card.active::before { opacity: 1; }
+.preset-card:hover { border-color: rgba(77,184,200,0.4); transform: translateY(-2px); }
+.preset-card.active {
+  border-color: var(--foam);
+  background: rgba(14,61,110,0.7);
+  box-shadow: 0 0 20px rgba(77,184,200,0.15), inset 0 1px 0 rgba(200,238,244,0.1);
+}
+.preset-sec {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--pearl);
+  line-height: 1;
+}
+.preset-unit { font-size: 0.55rem; color: var(--muted); letter-spacing: 0.15em; margin-top: 2px; }
+.preset-name { font-size: 0.55rem; color: var(--foam); letter-spacing: 0.1em; margin-top: 6px; }
+
+/* ── Custom builder ── */
+.custom-builder {
+  background: rgba(7,24,40,0.7);
+  border: 1px solid rgba(77,184,200,0.12);
+  border-radius: 18px;
+  padding: 24px;
+  backdrop-filter: blur(8px);
+}
+
+.phase-row {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 10px;
+}
+
+.phase-block {
+  background: rgba(10,39,68,0.5);
+  border: 1px solid rgba(77,184,200,0.12);
+  border-radius: 12px;
+  padding: 14px 8px;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+.phase-block.active-phase {
+  border-color: var(--foam);
+  box-shadow: 0 0 16px rgba(77,184,200,0.12);
+}
+.phase-name {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.phase-name.c-inhale { color: var(--sky); }
+.phase-name.c-hold1  { color: #a78bfa; }
+.phase-name.c-exhale { color: var(--kelp); filter: brightness(1.5); }
+.phase-name.c-hold2  { color: var(--sand); }
+
+.phase-val-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+.phase-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--pearl);
+  line-height: 1;
+  width: 64px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(77,184,200,0.2);
+  text-align: center;
+  outline: none;
+  -moz-appearance: textfield;
+  transition: border-color 0.2s;
+  padding: 2px 0;
+}
+.phase-val::-webkit-inner-spin-button,
+.phase-val::-webkit-outer-spin-button { -webkit-appearance: none; }
+.phase-val:focus {
+  border-bottom-color: var(--foam);
+  color: var(--sky);
+}
+.phase-unit-sm { font-size: 0.5rem; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 10px; }
+
+.phase-btns { display: flex; gap: 6px; justify-content: center; }
+.pbtn {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(14,61,110,0.5);
+  border: 1px solid rgba(77,184,200,0.2);
+  color: var(--foam);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  line-height: 1;
+}
+.pbtn:hover { background: rgba(77,184,200,0.15); border-color: var(--foam); }
+
+/* ── Cycles ── */
+.cycles-bar {
+  background: rgba(7,24,40,0.6);
+  border: 1px solid rgba(77,184,200,0.12);
+  border-radius: 14px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(6px);
+}
+.cycles-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: var(--foam);
+  line-height: 1;
+}
+.cycles-info small {
+  display: block;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.cycles-duration {
+  font-size: 0.75rem;
+  color: var(--sky);
+  margin-top: 4px;
+}
+.cycle-btn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(14,61,110,0.5);
+  border: 1px solid rgba(77,184,200,0.2);
+  color: var(--foam);
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.cycle-btn:hover { background: rgba(77,184,200,0.15); border-color: var(--foam); }
+
+/* ── Music ── */
+.music-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 8px;
+}
+@media (min-width:576px) { .music-grid { grid-template-columns: repeat(6,1fr); } }
+
+.mbtn {
+  background: rgba(10,39,68,0.5);
+  border: 1px solid rgba(77,184,200,0.12);
+  border-radius: 12px;
+  padding: 10px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s;
+  color: var(--muted);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+}
+.mbtn .mi { font-size: 1.3rem; display: block; margin-bottom: 4px; }
+.mbtn:hover { border-color: rgba(77,184,200,0.3); color: var(--text); }
+.mbtn.sel { border-color: var(--foam); color: var(--sky); background: rgba(14,61,110,0.5); }
+
+/* ── Volume ── */
+.vol-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 18px;
+  background: rgba(7,24,40,0.5);
+  border: 1px solid rgba(77,184,200,0.1);
+  border-radius: 12px;
+}
+.vol-label { font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); min-width: 55px; }
+input[type=range] { flex:1; -webkit-appearance:none; height:3px; background:rgba(77,184,200,0.2); border-radius:2px; outline:none; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:14px; height:14px; border-radius:50%; background:var(--foam); cursor:pointer; }
+
+/* ── Visualizer ── */
+.visualizer {
+  display: flex; flex-direction: column;
+  align-items: center; padding: 40px 20px 20px;
+}
+
+/* Square container */
+.sq-wrap { position:relative; width:220px; height:220px; margin-bottom:36px; }
+
+/* Corner labels */
+.sq-corner {
+  position:absolute; font-size:0.5rem; letter-spacing:0.15em;
+  text-transform:uppercase; color:var(--muted); transition:color 0.35s; white-space:nowrap;
+}
+.sq-corner.active { color:var(--foam); }
+.sq-tl{top:-20px;left:0;} .sq-tr{top:-20px;right:0;}
+.sq-br{bottom:-20px;right:0;} .sq-bl{bottom:-20px;left:0;}
+
+/* SVG */
+.sq-svg { width:100%; height:100%; overflow:visible; }
+.sq-track    { fill:none; stroke:rgba(77,184,200,0.15); stroke-width:1.5; }
+.sq-progress { fill:none; stroke:var(--foam); stroke-width:2.5; stroke-linecap:round;
+               filter:drop-shadow(0 0 8px rgba(77,184,200,0.7)); transition:stroke 0.4s; }
+.sq-dot      { fill:var(--foam); filter:drop-shadow(0 0 10px rgba(77,184,200,0.9)); }
+
+/* Inner background + center text overlay */
+.sq-bg-inner {
+  position:absolute; inset:12px; border-radius:12px;
+  background:radial-gradient(ellipse at 40% 35%, rgba(14,61,110,0.5), rgba(5,14,26,0.75));
+  transition:all 0.6s ease;
+}
+.sq-bg-inner.s-inhale { transform:scale(1.05); box-shadow:0 0 24px rgba(77,184,200,0.1) inset; }
+.sq-bg-inner.s-exhale { transform:scale(0.95); }
+.sq-bg-inner.s-hold1  { transform:scale(1.05); box-shadow:0 0 24px rgba(167,139,250,0.08) inset; }
+.sq-bg-inner.s-hold2  { transform:scale(0.95); }
+
+.sq-center {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:4px;
+  pointer-events:none;
+}
+
+.orb-phase {
+  font-family:'Playfair Display',serif; font-size:0.85rem; font-style:italic;
+  letter-spacing:0.08em; color:rgba(200,238,244,0.7); z-index:1;
+}
+.orb-count {
+  font-family:'Playfair Display',serif; font-size:2.8rem; font-weight:300;
+  color:var(--pearl); line-height:1; z-index:1;
+}
+.orb-cycle {
+  font-size:0.5rem; letter-spacing:0.25em; text-transform:uppercase;
+  color:var(--muted); z-index:1;
+}
+
+/* Progress bar */
+.prog-wrap { width:220px; height:2px; background:rgba(77,184,200,0.1); border-radius:2px; overflow:hidden; }
+.prog-fill { height:100%; background:linear-gradient(90deg,var(--surface),var(--foam)); width:0%; transition:background 0.5s; }
+
+/* Phase labels */
+.phase-labels { display:flex; gap:20px; margin-top:20px; flex-wrap:wrap; justify-content:center; }
+.pl {
+  font-size:0.52rem; letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--muted); transition:color 0.4s; display:flex; align-items:center; gap:5px;
+}
+.pl::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; flex-shrink:0; }
+.pl.active { color:var(--foam); }
+.pl.pl-inhale.active { color:var(--sky); }
+.pl.pl-hold1.active  { color:#a78bfa; }
+.pl.pl-exhale.active { color:#4dbb8a; }
+.pl.pl-hold2.active  { color:var(--sand); }
+
+/* ── Buttons ── */
+.btn-ocean {
+  background: linear-gradient(135deg, var(--mid), var(--surface));
+  border: 1px solid rgba(77,184,200,0.3);
+  color: var(--pearl);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  padding: 14px 32px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  width: 100%;
+}
+.btn-ocean:hover {
+  background: linear-gradient(135deg, var(--surface), var(--foam));
+  color: var(--deep);
+  border-color: var(--foam);
+  box-shadow: 0 6px 30px rgba(77,184,200,0.2);
+  transform: translateY(-1px);
+}
+.btn-stop {
+  background: transparent;
+  border: 1px solid rgba(77,184,200,0.2);
+  color: var(--muted);
+}
+.btn-stop:hover { border-color: var(--muted); color: var(--text); background: rgba(77,184,200,0.05); }
+
+.audio-ok { text-align:center; font-size:0.6rem; letter-spacing:0.15em; color:var(--foam); min-height:16px; }
+
+/* ── Cards ── */
+.glass-card {
+  background: rgba(7,24,40,0.55);
+  border: 1px solid rgba(77,184,200,0.1);
+  border-radius: 20px;
+  padding: 24px;
+  backdrop-filter: blur(10px);
+}
+
+/* ── Footer ── */
+footer {
+  text-align: center;
+  padding: 32px 20px;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: rgba(122,170,187,0.4);
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<!-- Ocean background -->
+<div class="ocean-bg">
+  <div class="rays"></div>
+  <div class="wave-layer"></div>
+  <div class="wave-layer"></div>
+  <div class="wave-layer"></div>
+  <div id="bubblesContainer"></div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="eyebrow">Apnée &nbsp;·&nbsp; Souffle &nbsp;·&nbsp; Profondeur</div>
+    <h1>Respiration <em>· Breathing</em></h1>
+    <p class="tagline">Descendre en soi · Maîtriser le souffle</p>
+  </header>
+
+  <div class="container py-4" style="max-width:680px">
+
+    <!-- PRESETS -->
+    <div class="mb-4">
+      <div class="section-label">Modèles de respiration</div>
+      <div class="preset-grid" id="presetGrid"></div>
+    </div>
+
+    <!-- CUSTOM BUILDER -->
+    <div class="glass-card mb-4">
+      <div class="section-label">Combinaison personnalisée</div>
+      <div class="phase-row" id="phaseRow"></div>
+      <p class="mt-3 text-center" style="font-size:0.6rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase">
+        de 0 à ∞ secondes · 0 = phase ignorée
+      </p>
+    </div>
+
+    <!-- MUSIC + VOLUME -->
+    <div class="glass-card mb-4">
+      <div class="section-label">Ambiance sonore</div>
+      <div class="music-grid mb-3" id="musicGrid"></div>
+      <div class="vol-row mb-2">
+        <span class="vol-label">Volume</span>
+        <input type="range" id="volSlider" min="0" max="100" value="40">
+        <span id="volVal" style="font-size:0.65rem;color:var(--muted);min-width:36px">40%</span>
+      </div>
+      <!-- Voice toggle -->
+      <div class="vol-row">
+        <span class="vol-label">Voix</span>
+        <div style="flex:1;display:flex;align-items:center;gap:10px">
+          <button id="btnVoice" onclick="toggleVoice()" style="
+            background:rgba(14,61,110,0.5);border:1px solid rgba(77,184,200,0.3);
+            border-radius:20px;padding:5px 16px;color:var(--foam);
+            font-family:'Raleway',sans-serif;font-size:0.6rem;letter-spacing:0.15em;
+            text-transform:uppercase;cursor:pointer;transition:all 0.2s;">
+            🔊 Activée
+          </button>
+          <span style="font-size:0.58rem;color:var(--muted);letter-spacing:0.1em">Douce · Féminine · EN</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CYCLES -->
+    <div class="cycles-bar mb-4">
+      <button class="cycle-btn" id="btnCyMinus">−</button>
+      <div class="cycles-info text-center">
+        <div class="cycles-num" id="cyNum">8</div>
+        <small>Cycles</small>
+        <div class="cycles-duration" id="cyDur">00:02:40</div>
+      </div>
+      <button class="cycle-btn" id="btnCyPlus">+</button>
+    </div>
+
+    <!-- VISUALIZER -->
+    <div class="visualizer mb-4">
+      <div class="sq-wrap">
+        <!-- Corner labels -->
+        <div class="sq-corner sq-tl" id="cl0">Inhaler</div>
+        <div class="sq-corner sq-tr" id="cl1">Retenir</div>
+        <div class="sq-corner sq-br" id="cl2">Exhaler</div>
+        <div class="sq-corner sq-bl" id="cl3">Retenir</div>
+
+        <!-- SVG path -->
+        <svg class="sq-svg" viewBox="0 0 220 220">
+          <rect class="sq-track"    x="12" y="12" width="196" height="196" rx="16"/>
+          <rect class="sq-progress" id="sqProgress" x="12" y="12" width="196" height="196" rx="16"
+                stroke-dasharray="784" stroke-dashoffset="784"/>
+          <circle class="sq-dot" id="sqDot" r="6" cx="110" cy="12"/>
+        </svg>
+
+        <!-- Inner bg + center text -->
+        <div class="sq-bg-inner" id="sqBg"></div>
+        <div class="sq-center">
+          <div class="orb-phase" id="orbPhase">—</div>
+          <div class="orb-count" id="orbCount">·</div>
+          <div class="orb-cycle" id="orbCycle">Prêt</div>
+        </div>
+      </div>
+
+      <div class="prog-wrap"><div class="prog-fill" id="progFill"></div></div>
+      <div class="phase-labels mt-3">
+        <div class="pl pl-inhale" id="lbl0">Inhaler</div>
+        <div class="pl pl-hold1"  id="lbl1">Retenir</div>
+        <div class="pl pl-exhale" id="lbl2">Exhaler</div>
+        <div class="pl pl-hold2"  id="lbl3">Retenir</div>
+      </div>
+    </div>
+
+    <div class="audio-ok mb-2" id="audioStatus"></div>
+    <button class="btn-ocean mb-3" id="btnStart">Commencer la plongée</button>
+    <button class="btn-ocean btn-stop mb-4" id="btnStop" style="display:none">Remonter à la surface</button>
+
+  </div>
+
+  <footer>Apnée · Respiration Carrée &nbsp;·&nbsp; Marseille</footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ══════════════════════════════════════════════
+//  BUBBLES
+// ══════════════════════════════════════════════
+(function spawnBubbles(){
+  const c = document.getElementById('bubblesContainer');
+  for(let i=0;i<18;i++){
+    const b=document.createElement('div');
+    b.className='bubble';
+    const sz=4+Math.random()*14;
+    b.style.cssText=`
+      width:${sz}px;height:${sz}px;
+      left:${Math.random()*100}%;
+      bottom:${Math.random()*20}%;
+      animation-duration:${8+Math.random()*18}s;
+      animation-delay:-${Math.random()*20}s;
+    `;
+    c.appendChild(b);
+  }
+})();
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+const PRESETS = [
+  {sec:5,  name:'Débutant'},
+  {sec:8,  name:'Calme'},
+  {sec:12, name:'Méditation'},
+  {sec:15, name:'Apnéiste'},
+  {sec:20, name:'Freediver'},
+  {sec:25, name:'Expert'},
+];
+
+const phaseDefs = [
+  {key:'inhale', label:'Inhaler', cls:'c-inhale', color:'#7ed6e0'},
+  {key:'hold1',  label:'Retenir', cls:'c-hold1',  color:'#a78bfa'},
+  {key:'exhale', label:'Exhaler', cls:'c-exhale',  color:'#4dbb8a'},
+  {key:'hold2',  label:'Retenir', cls:'c-hold2',  color:'#e8d5b0'},
+];
+
+let phaseVals = [5,5,5,5];
+let cycles=8, running=false, currentPhase=0, currentCycle=0, ticker=null;
+let selectedPreset=0, selectedMusic='ocean', volume=0.4;
+let audioCtx=null, musicNodes=[];
+
+// ══════════════════════════════════════════════
+//  AUDIO
+// ══════════════════════════════════════════════
+async function initAudio(){
+  if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==='suspended') await audioCtx.resume();
+  document.getElementById('audioStatus').textContent =
+    audioCtx.state==='running' ? '🌊 Audio actif' : '⚠️ Audio indisponible';
+  return audioCtx;
+}
+
+function stopMusic(){ musicNodes.forEach(n=>{try{n.stop()}catch(e){}try{n.disconnect()}catch(e){}}); musicNodes=[]; }
+
+async function startMusic(id){
+  stopMusic(); if(id==='none') return;
+  const ctx=await initAudio(); if(ctx.state!=='running') return;
+  const master=ctx.createGain(); master.gain.setValueAtTime(volume,ctx.currentTime);
+  master.connect(ctx.destination); musicNodes.push(master);
+  ({ocean,forest,bowl,drone,rain,wind})[id]?.(ctx,master);
+}
+
+function mkN(ctx,s=4){const b=ctx.createBuffer(1,ctx.sampleRate*s,ctx.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;return b;}
+
+function ocean(ctx,out){
+  for(let i=0;i<2;i++){
+    const src=ctx.createBufferSource();src.buffer=mkN(ctx,4);src.loop=true;
+    const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=350+i*150;
+    const g=ctx.createGain();g.gain.value=0.2;
+    const lfo=ctx.createOscillator();lfo.frequency.value=0.1+i*0.04;
+    const lg=ctx.createGain();lg.gain.value=0.15;
+    lfo.connect(lg);lg.connect(g.gain);lfo.start();
+    src.connect(lp);lp.connect(g);g.connect(out);src.start();musicNodes.push(src,lfo);
+  }
+}
+function forest(ctx,out){
+  const src=ctx.createBufferSource();src.buffer=mkN(ctx,2);src.loop=true;
+  const lp=ctx.createBiquadFilter();lp.type='bandpass';lp.frequency.value=700;lp.Q.value=0.4;
+  const g=ctx.createGain();g.gain.value=0.1;
+  src.connect(lp);lp.connect(g);g.connect(out);src.start();musicNodes.push(src);
+  function chirp(){if(!audioCtx)return;const o=ctx.createOscillator(),eg=ctx.createGain();o.frequency.value=1400+Math.random()*1600;o.type='sine';eg.gain.setValueAtTime(0,ctx.currentTime);eg.gain.linearRampToValueAtTime(0.05,ctx.currentTime+0.02);eg.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.35);o.connect(eg);eg.connect(out);o.start();o.stop(ctx.currentTime+0.4);setTimeout(chirp,700+Math.random()*3500);}chirp();
+}
+function bowl(ctx,out){
+  [220,440,659,880].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=f;g.gain.value=0.03/(i+1);o.connect(g);g.connect(out);o.start();musicNodes.push(o);});
+  function strike(){if(!audioCtx)return;[220,440,659,880].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0.1/(i+1),ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+5);o.connect(g);g.connect(out);o.start();o.stop(ctx.currentTime+5.1);});setTimeout(strike,6000+Math.random()*4000);}strike();
+}
+function drone(ctx,out){[[1,0],[2,2],[3,-3],[4,1],[6,5]].forEach(([m,dt])=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=55*m;o.detune.value=dt;g.gain.value=0.055/m;o.connect(g);g.connect(out);o.start();musicNodes.push(o);});}
+function rain(ctx,out){
+  const buf=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate),d=buf.getChannelData(0);
+  let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+  for(let i=0;i<d.length;i++){const w=Math.random()*2-1;b0=0.99886*b0+w*0.0555179;b1=0.99332*b1+w*0.0750759;b2=0.96900*b2+w*0.1538520;b3=0.86650*b3+w*0.3104856;b4=0.55000*b4+w*0.5329522;b5=-0.7616*b5-w*0.0168980;d[i]=(b0+b1+b2+b3+b4+b5+b6+w*0.5362)*0.11;b6=w*0.115926;}
+  const src=ctx.createBufferSource(),g=ctx.createGain();src.buffer=buf;src.loop=true;g.gain.value=0.38;src.connect(g);g.connect(out);src.start();musicNodes.push(src);
+}
+function wind(ctx,out){
+  const src=ctx.createBufferSource();src.buffer=mkN(ctx,3);src.loop=true;
+  const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=250;
+  const g=ctx.createGain();g.gain.value=0.25;
+  const lfo=ctx.createOscillator();lfo.frequency.value=0.07;
+  const lg=ctx.createGain();lg.gain.value=0.2;
+  lfo.connect(lg);lg.connect(g.gain);lfo.start();
+  src.connect(lp);lp.connect(g);g.connect(out);src.start();musicNodes.push(src,lfo);
+}
+
+function updateVol(){if(audioCtx&&musicNodes[0]?.gain)musicNodes[0].gain.setValueAtTime(volume,audioCtx.currentTime);}
+
+async function playBell(freq=440){
+  const ctx=await initAudio();if(ctx.state!=='running')return;
+  const o=ctx.createOscillator(),g=ctx.createGain();
+  o.type='sine';o.frequency.value=freq;
+  g.gain.setValueAtTime(0.35,ctx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+1.8);
+  o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+1.9);
+}
+
+// ══════════════════════════════════════════════
+//  BUILD UI
+// ══════════════════════════════════════════════
+function buildPresets(){
+  const g=document.getElementById('presetGrid');
+  g.innerHTML=PRESETS.map((p,i)=>`
+    <div class="preset-card ${i===selectedPreset?'active':''}" onclick="applyPreset(${i})">
+      <div class="preset-sec">${p.sec}</div>
+      <div class="preset-unit">sec</div>
+      <div class="preset-name">${p.name}</div>
+    </div>`).join('');
+}
+
+function applyPreset(i){
+  if(running) return;
+  selectedPreset=i;
+  const s=PRESETS[i].sec;
+  phaseVals=[s,s,s,s];
+  buildPresets(); buildPhases(); updateDur();
+}
+
+function buildPhases(){
+  document.getElementById('phaseRow').innerHTML=phaseDefs.map((p,i)=>`
+    <div class="phase-block" id="pb${i}">
+      <div class="phase-name ${p.cls}">${p.label}</div>
+      <div class="phase-val-wrap">
+        <input class="phase-val" id="pv${i}" type="number" min="0" value="${phaseVals[i]}"
+          oninput="onPhaseInput(${i})" onblur="onPhaseBlur(${i})">
+      </div>
+      <div class="phase-unit-sm">sec</div>
+      <div class="phase-btns">
+        <button class="pbtn" onclick="chgPhase(${i},-1)">−</button>
+        <button class="pbtn" onclick="chgPhase(${i},1)">+</button>
+      </div>
+    </div>`).join('');
+}
+
+function onPhaseInput(i){
+  if(running) return;
+  const v = parseInt(document.getElementById('pv'+i).value)||0;
+  phaseVals[i] = Math.max(0, v);
+  selectedPreset=-1; buildPresets(); updateDur();
+}
+
+function onPhaseBlur(i){
+  // ensure display is clean on blur
+  const el = document.getElementById('pv'+i);
+  if(el) el.value = phaseVals[i];
+}
+
+function chgPhase(i,d){
+  if(running)return;
+  phaseVals[i]=Math.max(0,phaseVals[i]+d);
+  const el=document.getElementById('pv'+i);
+  if(el) el.value=phaseVals[i];
+  selectedPreset=-1; buildPresets(); updateDur();
+}
+
+const musicDefs=[
+  {id:'none',  label:'Silence',  icon:'🔇'},
+  {id:'ocean', label:'Océan',    icon:'🌊'},
+  {id:'forest',label:'Forêt',    icon:'🌿'},
+  {id:'bowl',  label:'Bols',     icon:'🔔'},
+  {id:'drone', label:'Drone',    icon:'🎵'},
+  {id:'rain',  label:'Pluie',    icon:'🌧️'},
+  {id:'wind',  label:'Vent',     icon:'💨'},
+];
+
+function buildMusic(){
+  document.getElementById('musicGrid').innerHTML=musicDefs.map(m=>`
+    <button class="mbtn ${m.id===selectedMusic?'sel':''}" onclick="selMusic('${m.id}')" id="mb${m.id}">
+      <span class="mi">${m.icon}</span>${m.label}
+    </button>`).join('');
+}
+
+function selMusic(id){
+  selectedMusic=id;
+  musicDefs.forEach(m=>document.getElementById('mb'+m.id)?.classList.toggle('sel',m.id===id));
+}
+
+function updateDur(){
+  const t=phaseVals.reduce((s,v)=>s+v,0)*cycles;
+  document.getElementById('cyDur').textContent=`${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`;
+}
+
+document.getElementById('btnCyMinus').onclick=()=>{if(running)return;cycles=Math.max(1,cycles-1);document.getElementById('cyNum').textContent=cycles;updateDur();};
+document.getElementById('btnCyPlus').onclick=()=>{if(running)return;cycles=Math.min(99,cycles+1);document.getElementById('cyNum').textContent=cycles;updateDur();};
+document.getElementById('volSlider').oninput=function(){volume=this.value/100;document.getElementById('volVal').textContent=this.value+'%';updateVol();};
+
+// ══════════════════════════════════════════════
+//  SESSION
+// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════
+//  SPEECH SYNTHESIS
+// ══════════════════════════════════════════════
+let voiceEnabled = true;
+let preferredVoice = null;
+
+function toggleVoice(){
+  voiceEnabled = !voiceEnabled;
+  const btn = document.getElementById('btnVoice');
+  btn.textContent = voiceEnabled ? '🔊 Activée' : '🔇 Désactivée';
+  btn.style.opacity = voiceEnabled ? '1' : '0.5';
+}
+
+function loadVoice(){
+  if (!window.speechSynthesis) return;
+  const tryLoad = () => {
+    const voices = speechSynthesis.getVoices();
+    if (!voices.length) return;
+    // Priority: female EN voices — Samantha (iOS), Google UK Female, etc.
+    const preferred = [
+      v => v.name === 'Samantha',
+      v => v.name.includes('Samantha'),
+      v => /female|woman|fiona|karen|moira|tessa|victoria|allison|ava|susan/i.test(v.name) && v.lang.startsWith('en'),
+      v => v.lang === 'en-GB' && !v.name.toLowerCase().includes('male'),
+      v => v.lang.startsWith('en-'),
+    ];
+    for (const test of preferred) {
+      const match = voices.find(test);
+      if (match) { preferredVoice = match; break; }
+    }
+    if (!preferredVoice) preferredVoice = voices.find(v=>v.lang.startsWith('en')) || voices[0];
+  };
+  tryLoad();
+  speechSynthesis.onvoiceschanged = tryLoad;
+}
+
+function speak(text, rate=0.85, pitch=1.1, volume=0.9) {
+  if (!voiceEnabled || !window.speechSynthesis) return Promise.resolve();
+  return new Promise(resolve => {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    if (preferredVoice) u.voice = preferredVoice;
+    u.lang   = 'en-GB';
+    u.rate   = rate;
+    u.pitch  = pitch;
+    u.volume = volume;
+    u.onend  = resolve;
+    u.onerror= resolve;
+    speechSynthesis.speak(u);
+  });
+}
+
+// Countdown: "Relax and get comfortable" + 10…1
+async function spokenCountdown(onTick) {
+  await speak('Relax and get comfortable.', 0.78, 1.15);
+  await speak('We will begin in ten seconds.', 0.8, 1.1);
+  for (let i = 10; i >= 1; i--) {
+    if (!running) return;
+    onTick(i);
+    await speak(String(i), 0.9, 1.05);
+  }
+}
+
+// Phase voice cues
+const phaseCues = ['Breathe in.', 'Hold.', 'Breathe out.', 'Hold.'];
+
+loadVoice();
+
+// ══════════════════════════════════════════════
+//  SESSION
+// ══════════════════════════════════════════════
+const SQ_PERIM = 784;
+const SQ_OFF   = [0, 196, 392, 588]; // top, right, bottom, left
+
+function updateSquarePath(phaseIdx, progress) {
+  const traveled = SQ_OFF[phaseIdx] + 196 * Math.min(progress, 1);
+  document.getElementById('sqProgress').style.strokeDashoffset = SQ_PERIM - traveled;
+  document.getElementById('sqProgress').style.stroke = phaseDefs[phaseIdx].color;
+
+  let x, y, t = traveled;
+  if      (t <= 196) { x = 12 + t;        y = 12; }
+  else if (t <= 392) { x = 208;            y = 12 + (t - 196); }
+  else if (t <= 588) { x = 208 - (t-392);  y = 208; }
+  else               { x = 12;             y = 208 - (t-588); }
+  const dot = document.getElementById('sqDot');
+  dot.setAttribute('cx', x); dot.setAttribute('cy', y);
+  dot.setAttribute('fill', phaseDefs[phaseIdx].color);
+}
+
+function setOrbState(key) {
+  document.getElementById('sqBg').className = 'sq-bg-inner' + (key ? ' s-'+key : '');
+}
+
+function setLabels(idx){
+  for(let i=0;i<4;i++){
+    document.getElementById('lbl'+i).classList.toggle('active',i===idx);
+    document.getElementById('cl'+i).classList.toggle('active',i===idx);
+  }
+}
+
+function setPhaseBlocks(idx){
+  document.querySelectorAll('.phase-block').forEach((b,i)=>b.classList.toggle('active-phase',i===idx));
+}
+
+document.getElementById('btnStart').onclick=async function(){
+  if(running) return;
+  await initAudio();
+  running = true; currentCycle = 0; currentPhase = 0;
+  document.getElementById('btnStart').style.display='none';
+  document.getElementById('btnStop').style.display='block';
+  if(selectedMusic!=='none') await startMusic(selectedMusic);
+
+  // — Countdown —
+  document.getElementById('orbPhase').textContent = 'Get ready';
+  document.getElementById('orbPhase').style.color = 'var(--sky)';
+  document.getElementById('orbCycle').textContent = 'Préparation…';
+
+  await spokenCountdown(n => {
+    if (!running) return;
+    document.getElementById('orbCount').textContent = n;
+  });
+
+  if (!running) return;
+  document.getElementById('orbCount').textContent = '·';
+  runPhase();
+};
+
+document.getElementById('btnStop').onclick=function(){
+  running=false; clearInterval(ticker); stopMusic();
+  if(window.speechSynthesis) speechSynthesis.cancel();
+  document.getElementById('btnStart').style.display='block';
+  document.getElementById('btnStop').style.display='none';
+  document.getElementById('orbPhase').textContent='—';
+  document.getElementById('orbCount').textContent='·';
+  document.getElementById('orbCycle').textContent='Terminé';
+  document.getElementById('progFill').style.width='0%';
+  document.getElementById('audioStatus').textContent='';
+  document.getElementById('sqProgress').style.strokeDashoffset=SQ_PERIM;
+  document.getElementById('sqDot').setAttribute('cx',110);
+  document.getElementById('sqDot').setAttribute('cy',12);
+  setOrbState(''); setLabels(-1); setPhaseBlocks(-1);
+  playBell(220);
+};
+
+function runPhase(){
+  if(!running) return;
+  if(currentCycle>=cycles){ document.getElementById('btnStop').onclick(); return; }
+
+  // Skip phases with 0 seconds
+  if(phaseVals[currentPhase]===0){
+    currentPhase++;
+    if(currentPhase>=4){currentPhase=0;currentCycle++;}
+    runPhase(); return;
+  }
+
+  const pi  = currentPhase;
+  const pd  = phaseDefs[pi];
+  const dur = phaseVals[pi];
+
+  document.getElementById('orbPhase').textContent = pd.label;
+  document.getElementById('orbPhase').style.color = pd.color;
+  document.getElementById('orbCount').textContent = dur;
+  document.getElementById('orbCycle').textContent = `Cycle ${currentCycle+1} / ${cycles}`;
+  document.getElementById('progFill').style.background = pd.color;
+  document.getElementById('progFill').style.width = '0%';
+
+  setOrbState(pd.key); setLabels(pi); setPhaseBlocks(pi);
+  playBell([523,440,392,330][pi]);
+
+  // Spoken cue for this phase
+  speak(phaseCues[pi], 0.82, 1.12);
+
+  let elapsed=0; clearInterval(ticker);
+  ticker=setInterval(()=>{
+    elapsed+=50;
+    const prog=elapsed/(dur*1000);
+    document.getElementById('orbCount').textContent=Math.max(0,Math.ceil(dur-elapsed/1000));
+    document.getElementById('progFill').style.width=(prog*100)+'%';
+    updateSquarePath(pi, prog);
+    if(elapsed>=dur*1000){
+      clearInterval(ticker);
+      currentPhase++;
+      if(currentPhase>=4){currentPhase=0;currentCycle++;}
+      runPhase();
+    }
+  },50);
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+buildPresets(); buildPhases(); buildMusic(); updateDur();
+</script>
+</body>
+</html>
